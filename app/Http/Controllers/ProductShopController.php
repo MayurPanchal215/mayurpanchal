@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductShopController extends Controller
 {
@@ -40,5 +42,32 @@ class ProductShopController extends Controller
     {
         $productFetch = Product::find($request->id);
         return response()->json($productFetch);
+    }
+
+    /**
+    *  @author : Mayur Panchal
+    *  @param  : Request
+    *  @uses   : Get Product Information
+    *  @return : JSON of data
+    **/
+    public function saveCartData(Request $request)
+    {
+        $temp     = array();
+        foreach($request->cart as $k => $cart) {
+            $decodeJson = json_decode($cart);
+            $temp[$k]['id']    = $decodeJson->id;
+            $temp[$k]['price'] = $decodeJson->price;
+        }
+        
+        foreach($temp as $k => $data) {
+            $addOrder             = new Order();
+            $addOrder->user_id    = Auth::user()->id;
+            $addOrder->product_id = $data['id'];
+            $addOrder->price      = $data['price'];
+            $addOrder->created_at = date('Y-m-d H:i:s');
+            $addOrder->updated_at = date('Y-m-d H:i:s');
+            $addOrder->save();
+        }
+        return response()->json(true);
     }
 }

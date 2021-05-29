@@ -2,9 +2,7 @@
   <div class="container">
     <div class="row form-group">
       <div class="col-md-6 how-img">
-          <!-- <img src="https://image.ibb.co/dDW27U/Work_Section2_freelance_img1.png" class="rounded-circle img-fluid" alt=""/> -->
-          <!-- {{ product.product_image }} -->
-          <!-- <img class="img-responsive" :src="product.product_image" alt=""> -->
+          <img v-bind:src="`uploads/products/${product.product_image}`" class="img-fluid">
       </div>
       <div class="col-md-6">
           <h2><strong>{{ product.name }}</strong></h2>

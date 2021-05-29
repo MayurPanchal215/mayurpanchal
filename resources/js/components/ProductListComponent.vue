@@ -6,7 +6,7 @@
         <div v-if="products.length" v-for="product in products" v-bind:key="product.id" class="table-content">
             <div class="row form-group">
                 <div class="col-md-4 how-img">
-                    <img class="img-responsive" :src="getAvatar(product.product_image)">
+                    <img v-bind:src="`uploads/products/${product.product_image}`" class="img-fluid">
                 </div>
                 <div class="col-md-8">
                     <router-link :to="{path: '/product/'+product.id }"><h4>{{ product.name }}</h4></router-link>

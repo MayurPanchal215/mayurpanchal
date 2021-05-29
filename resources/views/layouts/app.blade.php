@@ -78,7 +78,9 @@
             </div>
         </nav>
         <main class="py-4">
-            <router-view></router-view>
+            @if( Auth::user() != null && Auth::user()->role == "User" )
+                <router-view></router-view>
+            @endif
             @yield('content')
         </main>
     </div>

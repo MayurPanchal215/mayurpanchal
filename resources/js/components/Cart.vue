@@ -23,9 +23,9 @@
                         </tr>
                     </tbody>
                 </table>
-                <div class="col-md-12">
+                <div class="col-md-12" >
                     <h3 class="cart-line">
-                        Total <span class="cart-price cart-total"></span>
+                        Total <span class="cart-price cart-total">{{ total }}</span>
                     </h3>
                 </div>
                 <div class="col-md-12 panel-footer row">
@@ -35,8 +35,8 @@
                         </div>
                     </div>
                     <div class="col-xs-6 text-right">   
-                        <div class="next">
-                            <button type="button" class="btn btn-success btn-md">Checkout</button>
+                        <div class="next">   
+                            <button type="button" class="btn btn-success btn-md" @click="checkout()">Checkout</button>
                         </div>
                     </div>
                 </div>
@@ -52,10 +52,18 @@
                 cart: [],
             };
         },
+        computed: {
+            total() {
+                this.cart = JSON.parse(localStorage.getItem("cart"))
+                return this.cart.reduce((total, p) => {
+                    return total + p.price
+                }, 0)
+            }
+        },
         methods: {
             removeFromCart(itemId) {
                 const cartItems = JSON.parse(localStorage.getItem("cart"));
-                const index = cartItems.findIndex(({ id }) => id === itemId);
+                const index = cartItems.findIndex(({ id }) => cartItems.id === itemId);
                 cartItems.splice(index, 1);
                 localStorage.setItem("cart", JSON.stringify(cartItems));
                 this.cart = JSON.parse(localStorage.getItem("cart"));
@@ -66,6 +74,16 @@
                 }
                 this.cart = JSON.parse(localStorage.getItem("cart"));
                 console.log(this.cart);
+            },
+            checkout() {
+                let url = `/productdata/savecartdata/`;
+                axios.get(url, { params: { cart: this.cart} })
+                .then((response) => {
+                    this.product         = response.data;
+                    this.cart            = JSON.parse(localStorage.getItem("cart"));
+                    var detailsPage      = this.$router.resolve({ path: '/checkout/'+12});
+                    window.location.href = detailsPage.href;
+                })
             },
         },
         beforeMount() {
